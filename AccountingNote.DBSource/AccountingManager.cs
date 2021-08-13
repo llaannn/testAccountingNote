@@ -11,12 +11,23 @@ namespace AccountingNote.DBSource
 {
     public class AccountingManager
     {
+        /// <summary>
+        /// 連結字串
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         //public static string GetConnectionString()
         //{
         //    string val = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         //    return val;
         //}
 
+        /// <summary>
+        /// 取得使用者列表
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public static DataTable GetAccountingList(string userID)
         {
             string connStr = DBHelper.GetConnectionString();
@@ -30,39 +41,55 @@ namespace AccountingNote.DBSource
                 FROM Accounting
                 WHERE UserID = @userID
                  ";
-            using (SqlConnection conn = new SqlConnection(connStr))
+
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@userID", userID));
+            try
             {
-                using (SqlCommand comm = new SqlCommand(dbcommand, conn))
-
-                {
-                    comm.Parameters.AddWithValue("@userID", userID);
-
-                    try
-                    {
-                        conn.Open();
-                        var reader = comm.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-
-                        return dt;
-
-                    }
-                    catch (Exception ex)
-                    {
-                        //Logger.WriteLog(ex);
-
-                        return null;
-                    }
-
-                }
-
+                return DBHelper.ReadDataTable(connStr, dbcommand, list);
 
             }
+            catch (Exception ex)
+            {
+                //Logger.WriteLog(ex);
 
+                return null;
+            }
         }
+        /// <summary>
+        /// 取得使用者列表(已擷取了方法)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        //private static DataTable ReadDataTable(string connStr, string dbcommand, List<SqlParameter> list)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+        //    {
+        //        using (SqlCommand comm = new SqlCommand(dbcommand, conn))
 
+        //        {
+        //            //comm.Parameters.AddWithValue("@userID", userID);
+        //            comm.Parameters.AddRange(list.ToArray());
 
+        //            conn.Open();
+        //            var reader = comm.ExecuteReader();
+
+        //            DataTable dt = new DataTable();
+        //            dt.Load(reader);
+
+        //            return dt;
+
+        //        }
+        //    }
+        //}
+
+        /// <summary>
+        /// 取得使用者帳號
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public static DataRow GetAccounting(int id, string userID)
         {
             string connStr = DBHelper.GetConnectionString();
@@ -112,7 +139,14 @@ namespace AccountingNote.DBSource
 
 
 
-
+        /// <summary>
+        /// 建立流水帳
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="caption"></param>
+        /// <param name="amount"></param>
+        /// <param name="actType"></param>
+        /// <param name="body"></param>
         public static void CreateAccounting(string userID, string caption, int amount, int actType, string body)
         {
             if (amount < 0 || amount > 1000000)
@@ -171,6 +205,16 @@ namespace AccountingNote.DBSource
             }
         }
 
+        /// <summary>
+        /// 新增流水帳
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="userID"></param>
+        /// <param name="caption"></param>
+        /// <param name="amount"></param>
+        /// <param name="actType"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
         public static bool UpdateAccounting(int ID, string userID, string caption, int amount, int actType, string body)
         {
             if (amount < 0 || amount > 1000000)
@@ -230,6 +274,10 @@ namespace AccountingNote.DBSource
             }
         }
 
+        /// <summary>
+        /// 刪除流水帳
+        /// </summary>
+        /// <param name="ID"></param>
         public static void DeleteAccounting(int ID)
         {
 
