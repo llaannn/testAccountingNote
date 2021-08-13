@@ -11,10 +11,18 @@ namespace AccountingNote.DBSource
 {
     public class UserInfoManger
     {
-
+        /// <summary>
+        /// 建立連線字串
+        /// </summary>
+        /// <returns></returns>
+        //public static string GetConnectionString()
+        //{
+        //    string val = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //    return val;
+        //}
         public static DataRow GetUserInfoByAccount(string account)
         {
-            string connectionString = GetConnectionString();
+            string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
                 @" SELECT [ID],[Account],[PWD],[Name],[Email]
                    FROM UserInfo
@@ -59,15 +67,7 @@ namespace AccountingNote.DBSource
 
         }
 
-        /// <summary>
-        /// 建立連線字串
-        /// </summary>
-        /// <returns></returns>
-        public static string GetConnectionString()
-        {
-            string val = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            return val;
-        }
+       
 
     }
 }
