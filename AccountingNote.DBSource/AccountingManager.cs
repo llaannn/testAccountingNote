@@ -301,7 +301,6 @@ namespace AccountingNote.DBSource
         public static void DeleteAccounting(int ID)
         {
 
-
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                     $@"DELETE [Accounting]
@@ -311,29 +310,44 @@ namespace AccountingNote.DBSource
        
              ";
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@id", ID));
 
-            using (SqlCommand comm = new SqlCommand(dbCommand, conn))
-
+            try
             {
-
-                comm.Parameters.AddWithValue("@id", ID);
-
-
-                try
-                {
-                    conn.Open();
-                    comm.ExecuteNonQuery();
-
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteLog(ex);
-
-                }
+                DBHelper.ModifyData(connStr, dbCommand, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
 
             }
+
+           
         }
 
+        //private static void ModifyData(string connStr, string dbCommand, List<SqlParameter> list)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+
+        //    using (SqlCommand comm = new SqlCommand(dbCommand, conn))
+
+        //    {
+        //        //comm.Parameters.AddWithValue("@id", ID);
+        //        comm.Parameters.AddRange(list.ToArray());
+        //        try
+        //        {
+        //            conn.Open();
+        //            comm.ExecuteNonQuery();
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Logger.WriteLog(ex);
+
+        //        }
+
+        //    }
+        //}
     }
 }

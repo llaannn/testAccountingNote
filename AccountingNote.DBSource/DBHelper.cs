@@ -61,17 +61,16 @@ namespace AccountingNote.DBSource
                     comm.Parameters.AddRange(list.ToArray());
 
 
-                   
-                        conn.Open();
-                        var reader = comm.ExecuteReader();
 
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
 
-                        if (dt.Rows.Count == 0)
-                            return null;
-                        return dt.Rows[0];
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
 
+                    if (dt.Rows.Count == 0)
+                        return null;
+                    return dt.Rows[0];
 
                 }
 
@@ -79,6 +78,21 @@ namespace AccountingNote.DBSource
             }
 
         }
+        public static void ModifyData(string connStr, string dbCommand, List<SqlParameter> list)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                using (SqlCommand comm = new SqlCommand(dbCommand, conn))
+
+                {
+                    //comm.Parameters.AddWithValue("@id", ID);
+
+                    comm.Parameters.AddRange(list.ToArray());
+                    conn.Open();
+                    comm.ExecuteNonQuery();
+
+                }
+            }
+        }
     }
 }
-
