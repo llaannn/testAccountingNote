@@ -28,41 +28,59 @@ namespace AccountingNote.DBSource
                    FROM UserInfo
                    WHERE [Account] = @account
                 ";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("account", account));
+
+
+            try
             {
+                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
 
-                using (SqlCommand Command = new SqlCommand(dbCommandString, connection))
-                {
-                    Command.Parameters.AddWithValue("account", account);
-
-                    try
-                    {
-                        connection.Open();
-                        SqlDataReader reader = Command.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-                        reader.Close();
-
-                        if (dt.Rows.Count == 0)//有資料就回傳第0筆
-                            return null;
-
-                        DataRow dr = dt.Rows[0];
-                        return dr;
-
-                        //id被設為主鍵一定會為第0筆所以只要回傳這樣就好
-
-                    }
-
-                    catch (Exception ex)
-
-                    {
-
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-                }
             }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+
+            //做完重構就註解
+            //using (SqlConnection connection = new SqlConnection(connectionString))
+            //{
+
+            //    using (SqlCommand Command = new SqlCommand(dbCommandString, connection))
+            //    {
+            //        //Command.Parameters.AddWithValue("account", account);
+            //        Command.Parameters.AddRange(list.ToArray());
+
+            //        try
+            //        {
+            //            connection.Open();
+            //            SqlDataReader reader = Command.ExecuteReader();
+
+            //            DataTable dt = new DataTable();
+            //            dt.Load(reader);
+            //            reader.Close();
+
+            //            if (dt.Rows.Count == 0)//有資料就回傳第0筆
+            //                return null;
+
+            //            DataRow dr = dt.Rows[0];
+            //            return dr;
+
+            //            //id被設為主鍵一定會為第0筆所以只要回傳這樣就好
+
+            //        }
+
+            //        catch (Exception ex)
+
+            //        {
+
+            //            Logger.WriteLog(ex);
+            //            return null;
+            //        }
+            //    }
+            //}
 
 
         }

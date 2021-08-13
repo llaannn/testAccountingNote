@@ -104,38 +104,58 @@ namespace AccountingNote.DBSource
                 FROM Accounting
                 WHERE id = @id AND UserID = @userID
                  ";
-            using (SqlConnection conn = new SqlConnection(connStr))
+
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@id", id));
+            list.Add(new SqlParameter("@userID", userID));
+            try
             {
-                using (SqlCommand comm = new SqlCommand(dbcommand, conn))
-
-                {
-                    comm.Parameters.AddWithValue("@id", id);
-                    comm.Parameters.AddWithValue("@userID", userID);//不窺探他人資料
-                    try
-                    {
-                        conn.Open();
-                        var reader = comm.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-
-                        if (dt.Rows.Count == 0)
-                            return null;
-                        return dt.Rows[0];
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-
-                }
-
+                return DBHelper.ReadDataRow(connStr, dbcommand, list);
 
             }
-
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
         }
+
+        //private static DataRow ReadDataRow(string connStr, string dbcommand, List<SqlParameter> list)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+        //    {
+        //        using (SqlCommand comm = new SqlCommand(dbcommand, conn))
+
+        //        {
+        //            //comm.Parameters.AddWithValue("@id", id);
+        //            //comm.Parameters.AddWithValue("@userID", userID);//不窺探他人資料
+        //            comm.Parameters.AddRange(list.ToArray());
+
+
+        //            try
+        //            {
+        //                conn.Open();
+        //                var reader = comm.ExecuteReader();
+
+        //                DataTable dt = new DataTable();
+        //                dt.Load(reader);
+
+        //                if (dt.Rows.Count == 0)
+        //                    return null;
+        //                return dt.Rows[0];
+
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Logger.WriteLog(ex);
+        //                return null;
+        //            }
+
+        //        }
+
+
+        //    }
+        //}
 
 
 
