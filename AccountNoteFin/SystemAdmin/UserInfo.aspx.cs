@@ -24,31 +24,29 @@ namespace AccountNoteFin.SystemAdmin
                         Response.Redirect("/Login.aspx");
                         return;
                     }
+                    var currentUser = AuthManager.GetCurrentUser();
 
-                    string account = this.Session["UserLoginInfo"] as string;
-                    DataRow dr = UserInfoManger.GetUserInfoByAccount(account);
+                    //string account = this.Session["UserLoginInfo"] as string;
+                    //DataRow dr = UserInfoManger.GetUserInfoByAccount(account);
 
-
-          
-
-
-                    if (dr == null)//如果帳號查不到那就倒回登入
+                    if (currentUser == null)//如果帳號查不到那就倒回登入
                     {
-                        this.Session["UserLoginInfo"] = null;
+                        //this.Session["UserLoginInfo"] = null;不需要重複檢查
                         Response.Redirect("/Login.aspx");
                         return;
                     }
-
-                    this.ltlAcc.Text = dr["Account"].ToString();
-                    this.ltlName.Text = dr["Name"].ToString();
-                    this.ltlEmail.Text = dr["Email"].ToString();
+                    //this.ltlAcc.Text = dr["Account"].ToString();一行為引用版本之前的樣子
+                    this.ltlAcc.Text = currentUser.Account;
+                    this.ltlName.Text = currentUser.Name;
+                    this.ltlEmail.Text = currentUser.Email;
                 }
             
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
-            this.Session["UserLoginInfo"] = null;
+            //this.Session["UserLoginInfo"] = null;
+            AuthManager.Logout();
             Response.Redirect("/Login.aspx");
         }
     }

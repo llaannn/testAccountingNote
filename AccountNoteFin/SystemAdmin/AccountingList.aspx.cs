@@ -24,17 +24,26 @@ namespace AccountNoteFin.SystemAdmin
             }
 
             //取得使用者資料
-            string account = this.Session["UserLoginInfo"] as string;
-            var dr = UserInfoManger.GetUserInfoByAccount(account);
+            //string account = this.Session["UserLoginInfo"] as string;
+            //var dr = UserInfoManger.GetUserInfoByAccount(account);
 
-            if (dr == null)
+            //if (dr == null)
+            //{
+            //    Response.Redirect("/Login.aspx");
+            //    return;
+            //}
+            var currentUser = AuthManager.GetCurrentUser();
+
+
+            if (currentUser == null)//如果帳號查不到那就倒回登入
             {
+                this.Session["UserLoginInfo"] = null;
                 Response.Redirect("/Login.aspx");
                 return;
             }
 
 
-            var dt = AccountingManager.GetAccountingList(dr["ID"].ToString());//把取得的帳號資料當參數傳給查詢的方法
+            var dt = AccountingManager.GetAccountingList(currentUser.ID);//把取得的帳號資料當參數傳給查詢的方法
 
             if (dt.Rows.Count > 0)
             {

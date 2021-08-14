@@ -23,13 +23,26 @@ namespace AccountNoteFin.SystemAdmin
 
             //取得使用者資料
             string account = this.Session["UserLoginInfo"] as string;
-            var drUserInfo = UserInfoManger.GetUserInfoByAccount(account);
+            //var drUserInfo = UserInfoManger.GetUserInfoByAccount(account);
 
-            if (drUserInfo == null)
+            //if (drUserInfo == null)
+            //{
+            //    Response.Redirect("/Login.aspx");
+            //    return;
+            //}
+            var currentUser = AuthManager.GetCurrentUser();
+
+            //string account = this.Session["UserLoginInfo"] as string;
+            //DataRow dr = UserInfoManger.GetUserInfoByAccount(account);
+
+            if (currentUser == null)//如果帳號查不到那就倒回登入
             {
+                this.Session["UserLoginInfo"] = null;
                 Response.Redirect("/Login.aspx");
                 return;
             }
+
+
             if (!this.IsPostBack)
             {
                 if (this.Request.QueryString["ID"] == null)
@@ -45,7 +58,8 @@ namespace AccountNoteFin.SystemAdmin
                     int id;
                     if (int.TryParse(idText, out id))
                     {
-                        var drAcc = AccountingManager.GetAccounting(id, drUserInfo["ID"].ToString());
+                        var drAcc = AccountingManager.GetAccounting(id, currentUser.ID);
+                        //var drAcc = AccountingManager.GetAccounting(id, drUserInfo["ID"].ToString());改之前的樣子
 
                         if (drAcc == null)
                         {
@@ -87,16 +101,20 @@ namespace AccountNoteFin.SystemAdmin
                 return;
             }
 
-            string account = this.Session["UserLoginInfo"] as string;
-            var dr = UserInfoManger.GetUserInfoByAccount(account);
+            UserInfoModel currentUser = AuthManager.GetCurrentUser();
 
-            if (dr == null)
+            //string account = this.Session["UserLoginInfo"] as string;
+            //var dr = UserInfoManger.GetUserInfoByAccount(account);
+
+            //if (dr == null)
+            if (currentUser == null)
             {
                 Response.Redirect("/Login.aspx");
                 return;
             }//從頁面移過來，確認現在登入者的ID
 
-            string userID = dr["ID"].ToString();
+            //string userID = dr["ID"].ToString();
+            string userID = currentUser.ID;
             string actTypeText = this.ddlActType.SelectedValue;
             string amountText = this.txtAmount.Text;
             string caption = this.txtCaption.Text;
