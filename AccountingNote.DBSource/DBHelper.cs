@@ -78,7 +78,7 @@ namespace AccountingNote.DBSource
             }
 
         }
-        public static void ModifyData(string connStr, string dbCommand, List<SqlParameter> list)
+        public static int ModifyData(string connStr, string dbCommand, List<SqlParameter> list)//本來為void後來改為int
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -89,8 +89,9 @@ namespace AccountingNote.DBSource
 
                     comm.Parameters.AddRange(list.ToArray());
                     conn.Open();
-                    comm.ExecuteNonQuery();
-
+                    //comm.ExecuteNonQuery()原先刪除到這裡截止這裡開始合併更新功能
+                    int effectRowCount = comm.ExecuteNonQuery();
+                    return effectRowCount;
                 }
             }
         }

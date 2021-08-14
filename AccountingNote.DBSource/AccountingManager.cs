@@ -259,46 +259,39 @@ namespace AccountingNote.DBSource
        
              ";
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            List<SqlParameter> paramList = new List<SqlParameter>();
+            //從list 改為paramList
+            paramList.Add(new SqlParameter("@userID", userID));
+            paramList.Add(new SqlParameter("@caption", caption));
+            paramList.Add(new SqlParameter("@amount", amount));
+            paramList.Add(new SqlParameter("@actType", actType));
+            paramList.Add(new SqlParameter("@createDate", DateTime.Now));
+            paramList.Add(new SqlParameter("@body", body));
+            paramList.Add(new SqlParameter("@id", ID));
 
-            using (SqlCommand comm = new SqlCommand(dbCommand, conn))
 
+            try
             {
-                comm.Parameters.AddWithValue("@userID", userID);
-                comm.Parameters.AddWithValue("@caption", caption);
-                comm.Parameters.AddWithValue("@amount", amount);
-                comm.Parameters.AddWithValue("@actType", actType);
-                comm.Parameters.AddWithValue("@createDate", DateTime.Now);
-                comm.Parameters.AddWithValue("@body", body);
-                comm.Parameters.AddWithValue("@id", ID);
+                int effectRows = DBHelper.ModifyData(connStr, dbCommand, paramList);
+                if (effectRows == 1)
 
+                    return true;
 
-                try
-                {
-                    conn.Open();
-                    int effectRows = comm.ExecuteNonQuery();
-
-                    if (effectRows == 1)
-
-                        return true;
-
-                    else
-                        return false;
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteLog(ex);
+                else
                     return false;
-                }
+            }
 
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return false;
             }
         }
-
-        /// <summary>
-        /// 刪除流水帳
-        /// </summary>
-        /// <param name="ID"></param>
-        public static void DeleteAccounting(int ID)
+            /// <summary>
+            /// 刪除流水帳
+            /// </summary>
+            /// <param name="ID"></param>
+            public static void DeleteAccounting(int ID)
         {
 
             string connStr = DBHelper.GetConnectionString();
@@ -323,7 +316,7 @@ namespace AccountingNote.DBSource
 
             }
 
-           
+
         }
 
         //private static void ModifyData(string connStr, string dbCommand, List<SqlParameter> list)
