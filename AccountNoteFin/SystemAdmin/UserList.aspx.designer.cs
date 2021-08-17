@@ -11,61 +11,52 @@ namespace AccountNoteFin.SystemAdmin
 {
 
 
-    public partial class AccountingList
+    public partial class UserList
     {
 
         /// <summary>
-        /// form1 控制項。
+        /// btNew 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.Button btNew;
 
         /// <summary>
-        /// btnCreate 控制項。
+        /// GridView1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCreate;
+        protected global::System.Web.UI.WebControls.GridView GridView1;
 
         /// <summary>
-        /// gvAccList 控制項。
+        /// usPager 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvAccList;
+        protected global::AccountNoteFin.UserControl.ucPager usPager;
 
         /// <summary>
-        /// ltPager 控制項。
+        /// usPager1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal ltPager;
+        protected global::AccountNoteFin.UserControl.ucPager usPager1;
 
         /// <summary>
-        /// ucPage2 控制項。
+        /// usPager2 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::AccountNoteFin.UserControl.ucPage2 ucPage2;
-
-        /// <summary>
-        /// plcNoData 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder plcNoData;
+        protected global::AccountNoteFin.UserControl.ucPager usPager2;
     }
 }

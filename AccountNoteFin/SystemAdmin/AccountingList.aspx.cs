@@ -47,8 +47,39 @@ namespace AccountNoteFin.SystemAdmin
 
             if (dt.Rows.Count > 0)
             {
-                this.gvAccList.DataSource = dt;
+                //int totalPages = this.GetTotalPages(dt);//先算出總項目數
+                //var dtPage = this.GetCPageDataTable(dt);//取出新表格
+                var dtPage = this.GetPageDataTable(dt);
+
+                this.ucPage2.TotalSize = dt.Rows.Count;
+                this.ucPage2.Bind();
+
+
+
+                this.gvAccList.DataSource = dtPage;//本來只放dt
                 this.gvAccList.DataBind();
+
+                ////this.ucPager.TotalSize = dt.Rows.Count;
+                ////this.ucPager.Bind();除以零的第一個方法還沒有改 暫且先這註解這邊
+
+
+
+              //  this.gvAccList.DataBind();
+
+                //var pages = (dt.Rows.Count / 10);
+                //if(dt.Rows.Count % 10>0)
+                
+                //    pages += 1;
+                //    this.ltPager.Text = $"共{dt.Rows.Count}筆，共{pages}頁，現在在第{this.GetCurrentPage()}頁<br/>";
+
+
+                ////最後跑迴圈 用來取出超連結的資料
+                //for (var i = 1; i <= totalPages; i++)
+                //{
+                //    this.ltPager.Text += $"<a href='AccountingList.aspx?page={i}'>{i}</a>&nbsp";
+                //}
+
+
             }
             else
             {
@@ -56,9 +87,63 @@ namespace AccountNoteFin.SystemAdmin
                 this.plcNoData.Visible = true;
 
             }
-
+           
 
         }
+        //private int GetTotalPages(DataTable dt)//取得總筆數
+        //{
+        //    int pegers = dt.Rows.Count / 10;
+        //    if ((dt.Rows.Count % 10) > 0)
+        //        pegers += 1;
+        //        return pegers;
+        //}
+
+
+        private int GetCurrentPage()
+        {
+            string pageText = Request.QueryString["Page"];
+            if (string.IsNullOrWhiteSpace(pageText))
+                return 1;
+            int intPage;
+
+
+            if(!int.TryParse(pageText, out intPage))
+                return 1;
+
+            if(intPage <=0)
+                return 1;
+            return intPage;
+
+        }
+
+        private DataTable GetPageDataTable(DataTable dt)//這裡只是複製資料
+        {
+            DataTable dtPage = dt.Clone(); //Clone 拿了結構出來用 COPY除了結構也拿了資料
+            int pageSize = this.ucPage2.PageSize;
+
+            int startIndex = (this.GetCurrentPage() - 1) * pageSize;
+            int endIndex = (this.GetCurrentPage()) * pageSize;
+            //int endIndex = (this.GetCurrentPage()) * 10;本來是直接放十筆
+
+            if (endIndex > dt.Rows.Count)
+                endIndex = dt.Rows.Count;
+            for (var i = startIndex; i < endIndex; i++)
+            {
+                DataRow dr = dt.Rows[i];
+                var drNew = dtPage.NewRow();
+
+                foreach(DataColumn dc in dt.Columns)
+               
+                {
+
+                    drNew[dc.ColumnName] = dr[dc];
+                }
+                dtPage.Rows.Add(drNew);
+            }
+            return dtPage;
+        }
+
+
 
         protected void btnCreate_Click(object sender, EventArgs e)
         {
